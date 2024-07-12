@@ -1,9 +1,13 @@
+"use client";
 import SortingVisualizer from "@/components/sorting-visualizer";
+import { ArrayProvider } from "@/contexts/ArrayContext";
 
 export default function Home() {
   return (
     <main className="">
-      <SortingVisualizer />
+      <ArrayProvider>
+        <SortingVisualizer />
+      </ArrayProvider>
     </main>
   );
 }
