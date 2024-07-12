@@ -2,9 +2,9 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { randomIntFromInterval } from '@/utils/utils';
-import { bubbleSort, selectionSort } from '@/utils/sorting-algorithms';
-import { useArrayContext, ArrayProvider } from "@/contexts/ArrayContext";
 import { AnimationStep } from "@/lib/types";
+import { bubbleSort, selectionSort } from '@/utils/sorting-algorithms';
+import { useBarContext, BarProvider } from "@/contexts/BarContext";
 import Bars from "./bars";
 
 const generateRandomArray = (length: number, min: number, max: number) => {
@@ -20,18 +20,18 @@ const executeAnimations = async (
 ): Promise<void> => {
     for (let i = 0; i < animations.length; i++) {
         if (stopFlag.current) break;
-
+    
         const [action, index1, index2] = animations[i];
-
+    
         if (action === 'compare') {
             setComparingIndices([index1, index2]);    
         } 
         
         await new Promise<void>(resolve => setTimeout(resolve, delay));
-
+    
         if (stopFlag.current) break;
        
-
+    
         setArray(prevArray => {
             const newArray = [...prevArray];
             if (action === 'swap') {
@@ -39,19 +39,17 @@ const executeAnimations = async (
             }
             return newArray;
         });
-
+    
         setComparingIndices(null);
     }
 };
 
 export default function SortingVisualizer() {
-    const { array, setArray, arrayLength, setArrayLength } = useArrayContext();
+    const { array, setArray, arrayLength, setArrayLength, comparingIndices, setComparingIndices } = useBarContext();
     const DEFAULT_LENGTH = 20;
     const FIXED_MIN = 5;
     const [inputArrayLength, setInputArrayLength] = useState<number>(DEFAULT_LENGTH);
     const [isSorting, setIsSorting] = useState<boolean>(false);
-    const [comparingIndices, setComparingIndices] = useState<[number, number] | null>(null);
-
 
     const stopFlag = useRef<boolean>(false);
 
@@ -71,7 +69,7 @@ export default function SortingVisualizer() {
         setIsSorting(true);
 
         const animations = sortingAlgorithm([...array]);
-        await executeAnimations(animations, 5, stopFlag, setArray, setComparingIndices);
+        await executeAnimations(animations, 50, stopFlag, setArray, setComparingIndices);
         setIsSorting(false);
     };
 
@@ -103,7 +101,7 @@ export default function SortingVisualizer() {
         <div className="flex flex-col items-center p-4">
             <h1 className="text-2xl font-bold mb-4">Sorting Visualizer</h1>
             <div className="p-5"></div>
-            <Bars comparingIndices={comparingIndices} />
+            <Bars />
             <div className="p-5"></div>
             <div className="flex space-x-1 items-center">
                 <button

@@ -1,10 +1,10 @@
 "use client";
 
-import { useArrayContext } from "@/contexts/ArrayContext";
-import React, { useEffect, useState, useRef } from 'react';
+import { useBarContext } from "@/contexts/BarContext";
+import React, { useEffect, useState } from 'react';
 
-export default function Bars({ comparingIndices }: { comparingIndices: [number, number] | null }) {
-    const { array, arrayLength } = useArrayContext();
+export default function Bars() {
+    const { array, arrayLength, comparingIndices } = useBarContext();
     const [containerWidth, setContainerWidth] = useState<number>(0);
     const [containerHeight, setContainerHeight] = useState<number>(0);
 
