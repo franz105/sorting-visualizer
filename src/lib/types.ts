@@ -2,7 +2,7 @@
 export type AnimationStep = [
     'compare' | 'swap' | 'overwrite',
     number,
-    number
+    number,
 ];
 
 export type ArrayContextType = {

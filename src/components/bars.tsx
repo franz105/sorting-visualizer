@@ -31,7 +31,7 @@ export default function Bars() {
                             marginLeft: `${barMargin}px`,
                         }}
                     >
-                        {value}
+                        {/* {value} */}
                     </div>
                 );
             })}

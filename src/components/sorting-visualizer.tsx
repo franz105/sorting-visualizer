@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { randomIntFromInterval } from '@/utils/utils';
 import { AnimationStep } from "@/lib/types";
-import { bubbleSort, selectionSort } from '@/utils/sorting-algorithms';
+import { bubbleSort, mergeSort, selectionSort } from '@/utils/sorting-algorithms';
 import { useBarContext, BarProvider } from "@/contexts/BarContext";
 import Bars from "./bars";
 
@@ -21,11 +21,13 @@ const executeAnimations = async (
     for (let i = 0; i < animations.length; i++) {
         if (stopFlag.current) break;
     
-        const [action, index1, index2] = animations[i];
+        const [action, index1, index2OrValue] = animations[i];
     
         if (action === 'compare') {
-            setComparingIndices([index1, index2]);    
-        } 
+            setComparingIndices([index1, index2OrValue]);
+        } else {
+            setComparingIndices(null);
+        }
         
         await new Promise<void>(resolve => setTimeout(resolve, delay));
     
@@ -35,26 +37,38 @@ const executeAnimations = async (
         setArray(prevArray => {
             const newArray = [...prevArray];
             if (action === 'swap') {
-                [newArray[index1], newArray[index2]] = [newArray[index2], newArray[index1]];
+                [newArray[index1], newArray[index2OrValue]] = [newArray[index2OrValue], newArray[index1]];
+            } else if (action === 'overwrite') {
+                const fromIndex = index1;
+                const toIndex = index2OrValue;        
+                if (fromIndex !== toIndex) {
+                    const [element] = newArray.splice(fromIndex, 1);
+                    // Insert the element at the target position
+                    newArray.splice(toIndex, 0, element);
+                }
             }
             return newArray;
         });
     
+
         setComparingIndices(null);
+        
     }
 };
 
 export default function SortingVisualizer() {
     const { array, setArray, arrayLength, setArrayLength, comparingIndices, setComparingIndices } = useBarContext();
     const DEFAULT_LENGTH = 20;
-    const FIXED_MIN = 5;
+    const [minValue, setMinValue] = useState<number>(1); 
     const [inputArrayLength, setInputArrayLength] = useState<number>(DEFAULT_LENGTH);
     const [isSorting, setIsSorting] = useState<boolean>(false);
+
 
     const stopFlag = useRef<boolean>(false);
 
     useEffect(() => {
-        const initialArray = generateRandomArray(DEFAULT_LENGTH, FIXED_MIN, DEFAULT_LENGTH);
+        setMinValue(Math.ceil(0.05 * arrayLength));
+        const initialArray = generateRandomArray(DEFAULT_LENGTH, minValue, DEFAULT_LENGTH);
         setArray(initialArray);
         setArrayLength(DEFAULT_LENGTH);
     }, [setArray, setArrayLength]);
@@ -63,24 +77,29 @@ export default function SortingVisualizer() {
         if (isSorting) {
             stopFlag.current = true;
             console.log("Sorting stopped");
+
             setArray([...array]);
         }
         stopFlag.current = false;
         setIsSorting(true);
 
         const animations = sortingAlgorithm([...array]);
-        await executeAnimations(animations, 50, stopFlag, setArray, setComparingIndices);
+        await executeAnimations(animations, 10, stopFlag, setArray, setComparingIndices);
         setIsSorting(false);
     };
 
     const startSelectionSort = () => startSorting(selectionSort);
     const startBubbleSort = () => startSorting(bubbleSort);
+    const startMergeSort = () => startSorting(mergeSort);
 
     const resetArray = () => {
         if (isSorting) {
             stopFlag.current = true;
         }
-        const newArray = generateRandomArray(inputArrayLength, FIXED_MIN, inputArrayLength);
+        setMinValue(Math.ceil(0.05 * arrayLength));
+        const newArray = generateRandomArray(inputArrayLength, minValue, inputArrayLength);
+        console.log(newArray);
+        setComparingIndices(null);
         setArray(newArray);
         setArrayLength(inputArrayLength);
         setIsSorting(false);
@@ -116,6 +135,13 @@ export default function SortingVisualizer() {
                 >
                     Bubble Sort
                 </button>
+                <button
+                    onClick={startMergeSort}
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                >
+                    Merge Sort
+                </button>
+
             </div>
             <div className="p-5"></div>
             <div className="flex space-x-4 items-center">
