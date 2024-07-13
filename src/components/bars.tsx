@@ -17,8 +17,12 @@ export default function Bars() {
         <div className="flex justify-center items-end mb-4"
             style={{ height: `${containerHeight}px`, width: `${containerWidth}px` }}>
             {array.map((value, index) => {
-                const barWidth = (containerWidth / arrayLength) * 0.7; // 70% of available space
-                const barMargin = (containerWidth / arrayLength) * 0.2; // 20% of available space
+                let barWidth = containerWidth / arrayLength;
+                let barMargin = 0;
+                if (barWidth > 4) {
+                    barWidth = (containerWidth / arrayLength) * 0.7; 
+                    barMargin = (containerWidth / arrayLength) * 0.2 ; 
+                } 
                 const isComparing = comparingIndices && (index === comparingIndices[0] || index === comparingIndices[1]);
 
                 return (
@@ -31,7 +35,6 @@ export default function Bars() {
                             marginLeft: `${barMargin}px`,
                         }}
                     >
-                        {/* {value} */}
                     </div>
                 );
             })}

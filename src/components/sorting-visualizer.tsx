@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { randomIntFromInterval } from '@/utils/utils';
 import { AnimationStep } from "@/lib/types";
-import { bubbleSort, mergeSort, selectionSort } from '@/utils/sorting-algorithms';
+import { bubbleSort, mergeSort, quicksort, selectionSort } from '@/utils/sorting-algorithms';
 import { useBarContext, BarProvider } from "@/contexts/BarContext";
 import Bars from "./bars";
 
@@ -91,6 +91,7 @@ export default function SortingVisualizer() {
     const startSelectionSort = () => startSorting(selectionSort);
     const startBubbleSort = () => startSorting(bubbleSort);
     const startMergeSort = () => startSorting(mergeSort);
+    const startQuickSort = () => startSorting(quicksort);
 
     const resetArray = () => {
         if (isSorting) {
@@ -116,6 +117,7 @@ export default function SortingVisualizer() {
         setInputArrayLength(Math.max(10, Math.min(value, 500)));
     };
 
+
     return (
         <div className="flex flex-col items-center p-4">
             <h1 className="text-2xl font-bold mb-4">Sorting Visualizer</h1>
@@ -140,6 +142,12 @@ export default function SortingVisualizer() {
                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
                 >
                     Merge Sort
+                </button>
+                <button
+                    onClick={startQuickSort}
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                >
+                    Quicksort
                 </button>
 
             </div>
