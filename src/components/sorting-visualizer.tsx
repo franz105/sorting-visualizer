@@ -76,10 +76,9 @@ export default function SortingVisualizer() {
 
     const startSorting = async (sortingAlgorithm: (array: number[]) => AnimationStep[]) => {
         if (isSorting) {
-            stopFlag.current = true;
-            console.log("Sorting stopped");
-
-            setArray([...array]);
+            stopFlag.current = true;  
+            await new Promise(resolve => setTimeout(resolve, 100));
+            setComparingIndices(null); 
         }
         stopFlag.current = false;
         setIsSorting(true);
