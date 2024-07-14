@@ -1,23 +1,21 @@
 import React from 'react'
 
 type SortingButtonProps = {
-    array: number[],
-    name: string,
-    onClick: () => void,
-    animations: (string | number)[][],
-}
+  name: string,
+  onClick: () => void
+  }
 
 export default function SortingButton(
-    {   
-        array,
-        name,
-        onClick,
-        animations
-    }: SortingButtonProps
-) {
+{   
+  name,
+  onClick
+}: SortingButtonProps) {
   return (
-    <button onClick={onClick}>
-          {name} 
+    <button
+      onClick={onClick}
+      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+    >
+      {name}
     </button>
   )
-}
+  }

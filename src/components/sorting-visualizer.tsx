@@ -10,6 +10,7 @@ import { bubbleSort } from "@/utils/sortingAlgorithms/bubbleSort";
 import { useBarContext, BarProvider } from "@/contexts/BarContext";
 import Bars from "./bars";
 import { heapsort } from "@/utils/sortingAlgorithms/heapsort";
+import SortingButton from "./sorting-button";
 
 const executeAnimations = async (
     animations: AnimationStep[],
@@ -120,37 +121,11 @@ export default function SortingVisualizer() {
             <Bars />
             <div className="p-5"></div>
             <div className="flex space-x-1 items-center">
-                <button
-                    onClick={startSelectionSort}
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-                >
-                    Selection Sort
-                </button>
-                <button
-                    onClick={startBubbleSort}
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-                >
-                    Bubble Sort
-                </button>
-                <button
-                    onClick={startMergeSort}
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-                >
-                    Merge Sort
-                </button>
-                <button
-                    onClick={startQuickSort}
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-                >
-                    Quicksort
-                </button>
-                <button
-                    onClick={startHeapSort}
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-                >
-                    Heap Sort
-                </button>
-
+                <SortingButton name="Selection Sort" onClick={startSelectionSort}/>
+                <SortingButton name="Bubble Sort" onClick={startBubbleSort}/>
+                <SortingButton name="Merge Sort" onClick={startMergeSort}/>
+                <SortingButton name="Quicksort" onClick={startQuickSort}/>
+                <SortingButton name="Heap Sort" onClick={startHeapSort}/>
             </div>
             <div className="p-5"></div>
             <div className="flex space-x-4 items-center">
