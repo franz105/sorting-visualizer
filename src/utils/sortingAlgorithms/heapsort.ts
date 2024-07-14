@@ -18,14 +18,17 @@ function heapsortHelper(array: number[], animations: AnimationStep[]) {
         heapify(array, i, 0, animations);
     }
 }
+
 function heapify(array: number[], n: number, i: number, animations: AnimationStep[]) {
     let largest = i;
     const l = 2 * i + 1;
     const r = 2 * i + 2;
     if (l < n && array[l] > array[largest]) {
+        animations.push(['compare', largest, l]);
         largest = l;
     }
     if (r < n && array[r] > array[largest]) {
+        animations.push(['compare', largest, r]);
         largest = r;
     }
     if (largest !== i) {
