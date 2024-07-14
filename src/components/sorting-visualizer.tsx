@@ -1,15 +1,15 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from 'react';
-import { randomIntFromInterval } from '@/utils/utils';
+import { generateRandomArray } from '@/utils/utils';
 import { AnimationStep } from "@/lib/types";
-import { bubbleSort, mergeSort, quicksort, selectionSort } from '@/utils/sorting-algorithms';
+import { quicksort } from "@/utils/sortingAlgorithms/quicksort";
+import { mergeSort } from "@/utils/sortingAlgorithms/mergeSort";
+import { selectionSort } from "@/utils/sortingAlgorithms/selectionSort";
+import { bubbleSort } from "@/utils/sortingAlgorithms/bubbleSort";
 import { useBarContext, BarProvider } from "@/contexts/BarContext";
 import Bars from "./bars";
-
-const generateRandomArray = (length: number, min: number, max: number) => {
-    return Array.from({ length }, () => randomIntFromInterval(min, max));
-}
+import { heapsort } from "@/utils/sortingAlgorithms/heapsort";
 
 const executeAnimations = async (
     animations: AnimationStep[],
@@ -92,6 +92,7 @@ export default function SortingVisualizer() {
     const startBubbleSort = () => startSorting(bubbleSort);
     const startMergeSort = () => startSorting(mergeSort);
     const startQuickSort = () => startSorting(quicksort);
+    const startHeapSort = () => startSorting(heapsort);
 
     const resetArray = () => {
         if (isSorting) {
@@ -106,15 +107,9 @@ export default function SortingVisualizer() {
         setIsSorting(false);
     };
 
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
-            resetArray();
-        }
-    };
-
-    const handleLengthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = Number(e.target.value);
-        setInputArrayLength(Math.max(10, Math.min(value, 500)));
+    const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = Number(event.target.value);
+        setInputArrayLength(value);
     };
 
 
@@ -149,6 +144,12 @@ export default function SortingVisualizer() {
                 >
                     Quicksort
                 </button>
+                <button
+                    onClick={startHeapSort}
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                >
+                    Heap Sort
+                </button>
 
             </div>
             <div className="p-5"></div>
@@ -156,14 +157,17 @@ export default function SortingVisualizer() {
                 <label className="flex items-center">
                     Length:
                     <input
-                        type="number"
-                        value={inputArrayLength}
-                        onChange={handleLengthChange}
-                        onKeyDown={handleKeyDown}
+                        type="range"
                         min="10"
                         max="500"
-                        className="ml-2 p-1 border rounded text-black"
+                        value={inputArrayLength}
+                        onChange={handleSliderChange}
+                        className="ml-2"
                     />
+                    <div className="w-8">
+                        <span className="ml-2 text-center">{inputArrayLength}</span>
+                    </div>
+                    
                 </label>
                 <button
                     onClick={resetArray}
